@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 namespace DiskretkaN1
 {
     class Program
@@ -287,6 +286,10 @@ namespace DiskretkaN1
                         indexMinusOne = g;
                     if (MatrixIncid[i, g] == 1)
                         indexOne = g;
+                    if (MatrixIncid[i, g] != -1 && MatrixIncid[i, g] != 1 && MatrixIncid[i, g] != 0)
+                    {
+                        MatrixSmezh[g, g] = 1;
+                    }
                 }
                 MatrixSmezh[indexMinusOne, indexOne] = 1;
             }
@@ -324,6 +327,7 @@ namespace DiskretkaN1
             MatrixIncid = null;
             GC.Collect();
             int n = 0;
+            rebra = 0; //Минус ошибка
             for (int i = 0; i < vershiny; i++)
                 rebra += SpisokSmezh[i].Length - 1;
             MatrixIncid = new int[rebra, vershiny];
