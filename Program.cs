@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DiskretkaN1
 {
@@ -17,23 +16,23 @@ namespace DiskretkaN1
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("\n\t\tМатрица инцидентности\n\n");
             Console.ResetColor();
-                Console.Write("\t\t");
+            Console.Write("\t\t");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            for (int i = 1; i <= vershiny; i++)
+            {
+                Console.Write("\tx" + i + "   ");
+            }
+            Console.ResetColor();
+            Console.WriteLine();
+            for (int i = 0; i < rebra; i++)
+            {
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                for (int i = 1; i <= vershiny; i++)
-                {
-                    Console.Write("\tx" + i + "   ");
-                }
+                Console.Write("\n\t\te" + (i + 1) + "\t");
                 Console.ResetColor();
+                for (int g = 0; g < vershiny; g++)
+                    Console.Write(MatrixIncid[i, g] + "\t");
                 Console.WriteLine();
-                for (int i = 0; i < rebra; i++)
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write("\n\t\te" + (i + 1) + "\t");
-                    Console.ResetColor();
-                    for (int g = 0; g < vershiny; g++)
-                        Console.Write(MatrixIncid[i, g] + "\t");
-                    Console.WriteLine();
-                } 
+            }
         }
         private static void Incid_Input()
         {
@@ -157,21 +156,21 @@ namespace DiskretkaN1
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("\n\t\tМатрица смежности\n\n");
             Console.ResetColor();
-                Console.Write("\t\t");
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                for (int i = 1; i <= vershiny; i++)
+            Console.Write("\t\t");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            for (int i = 1; i <= vershiny; i++)
                 {
                     Console.Write("\tx" + i + "   ");
                 }
-                Console.ResetColor();
-                Console.WriteLine();
-                for (int i = 0; i < vershiny; i++)
+            Console.ResetColor();
+            Console.WriteLine();
+            for (int i = 0; i < vershiny; i++)
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write("\n\t\tx" + (i + 1) + "\t");
-                    Console.ResetColor();
-                    for (int g = 0; g < vershiny; g++)
-                        Console.Write(MatrixSmezh[i, g] + "\t");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("\n\t\tx" + (i + 1) + "\t");
+                Console.ResetColor();
+                for (int g = 0; g < vershiny; g++)
+                    Console.Write(MatrixSmezh[i, g] + "\t");
                     Console.WriteLine();
                 }
         }
@@ -217,7 +216,7 @@ namespace DiskretkaN1
                 {
                     Console.Write(" Введите номера вершин, связанных с ");
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
-                    Console.Write("x"+(i+1)+":\n");
+                    Console.Write("x" + (i + 1) + ":\n");
                     Console.ResetColor();
                     for (int g = 0; g < vershiny; g++)
                     {
@@ -248,6 +247,7 @@ namespace DiskretkaN1
                 SpisokSmezh[i] = vs[i].ToArray();
                 vs[i].Clear();
             }
+            GC.Collect();
         }
         private static void Spisok_Output()
         {
@@ -259,7 +259,7 @@ namespace DiskretkaN1
             for (int i = 0; i < vershiny; i++)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write("\tx"+(i+1));
+                Console.Write("\t\tx"+(i+1));
                 Console.ResetColor(); Console.Write(" - ");
                 for (int g = 0; g < SpisokSmezh[i].Length; g++)
                 {
@@ -271,40 +271,69 @@ namespace DiskretkaN1
                 }
                 Console.WriteLine("\n");
             }
-
         }
         private static void Incid_To_Smezh()
         {
+            MatrixSmezh = null;
+            GC.Collect();
             int indexOne = new int();
             int indexMinusOne = new int();
-
+            MatrixSmezh = new int[vershiny, vershiny];
+            for (int i = 0; i < rebra; i++)
+            {
+                for(int g=0; g < vershiny; g++)
+                {
+                    if (MatrixIncid[i, g] == -1)
+                        indexMinusOne = g;
+                    if (MatrixIncid[i, g] == 1)
+                        indexOne = g;
+                }
+                MatrixSmezh[indexMinusOne, indexOne] = 1;
+            }
+        }
+        private static void Smezh_To_Spisok()
+        {
+            SpisokSmezh = null;
+            GC.Collect();
+            SpisokSmezh = new int[vershiny][];
+            List<int>[] vs = new List<int>[vershiny];
             for (int i = 0; i < vershiny; i++)
             {
-                for(int g=0; g < rebra; g++)
-                {
-                    if (MatrixIncid[i, g] == 1 || MatrixIncid[i, g] == -1)
-                    {
-                        indexOne = g;
-                        continue;
-                    }
-                    if (MatrixIncid[i, g] == -1|| MatrixIncid[i, g] == -1)
-                        indexMinusOne = g;
-                }
-                if (indexOne==-1 || indexMinusOne==-1) {
-                    if (indexOne == 1)
-                    {
-                        MatrixSmezh[g,i]
-                    }
-                    else
-                    {
-
-                    }
-                
-                
-                }
+                vs[i] = new List<int>();
             }
-                
-                    
+            for(int i = 0; i < vershiny; i++)
+            {
+                for(int g = 0; g < vershiny; g++)
+                {
+                    if (MatrixSmezh[i, g] == 1)
+                    {
+                        vs[i].Add(g+1);
+                    }
+                }
+                vs[i].Add(0);
+            }
+            for (int i = 0; i < vershiny; i++)
+            {
+                SpisokSmezh[i] = vs[i].ToArray();
+                vs[i].Clear();
+            }
+            GC.Collect();
+        }
+        private static void Spisok_To_Incid()
+        {
+            MatrixIncid = null;
+            GC.Collect();
+            int n = 0;
+            for (int i = 0; i < vershiny; i++)
+                rebra += SpisokSmezh[i].Length - 1;
+            MatrixIncid = new int[rebra, vershiny];
+                for (int i = 0; i < vershiny; i++)
+                    for (int g = 0; g < SpisokSmezh[i].Length; g++)
+                        if (SpisokSmezh[i][g] != 0)
+                        {
+                            MatrixIncid[n, i] = -1;
+                            MatrixIncid[n++, (SpisokSmezh[i][g] - 1)] = 1;
+                        }
         }
         private static void StartMenu()
         {
@@ -335,18 +364,27 @@ namespace DiskretkaN1
                     case 1:
                         {
                             Incid_Input();
+                            Incid_To_Smezh();
+                            Smezh_To_Spisok();
+                            Console.Clear();
                             ShowingMenu();
                             break;
                         }
                     case 2:
                         {
                             Smezh_Input();
+                            Smezh_To_Spisok();
+                            Spisok_To_Incid();
+                            Console.Clear();
                             ShowingMenu();
                             break;
                         }
                     case 3:
                         {
                             Spisok_Input();
+                            Spisok_To_Incid();
+                            Incid_To_Smezh();
+                            Console.Clear();
                             ShowingMenu();
                             break;
                         }
@@ -392,7 +430,7 @@ namespace DiskretkaN1
             Console.Write("Список смежности\t\t");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write("0 - ");
-            Console.WriteLine("Выход\n\n");
+            Console.WriteLine("Ввести новый граф\n\n");
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.Write(" Действие: ");
             Console.ResetColor();
@@ -403,25 +441,29 @@ namespace DiskretkaN1
                 {
                     case 1:
                         {
+                            Console.Clear();
                             Incid_Output();
                             ShowingMenu();
                             break;
                         }
                     case 2:
                         {
+                            Console.Clear();
                             Smezh_Output();
                             ShowingMenu();
                             break;
                         }
                     case 3:
                         {
+                            Console.Clear();
                             Spisok_Output();
                             ShowingMenu();
                             break;
                         }
                     case 0:
                         {
-                            Environment.Exit(0);
+                            Console.Clear();
+                            StartMenu();
                             break;
                         }
                     default:
@@ -446,12 +488,9 @@ namespace DiskretkaN1
 
 
         }
-        static void Main(string[] args)
+        static void Main()
         {
-            ShowingMenu();
-
-
-
+            StartMenu();
         }
     }
 }
