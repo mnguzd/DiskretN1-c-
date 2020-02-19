@@ -374,17 +374,7 @@ namespace DiskretkaN1
                 {
                     case 1: Incid_Input(); Incid_To_Smezh(); Smezh_To_Spisok(); Console.Clear(); ShowingMenu(); break;
                     case 2: Smezh_Input(); Smezh_To_Spisok(); Spisok_To_Incid(); Console.Clear(); ShowingMenu(); break;
-                    case 3: Spisok_Input(); try { Spisok_To_Incid(); }
-                        catch { Environment.Exit(1); }
-                        try
-                        {
-                            Incid_To_Smezh();
-                        }
-                        catch
-                        {
-                            Environment.Exit(2);
-                        }
-                        Console.Clear(); ShowingMenu(); break;
+                    case 3: Spisok_Input();  Spisok_To_Incid(); Incid_To_Smezh(); Console.Clear(); ShowingMenu(); break;
                     case 0: Environment.Exit(0); break;
                     default: 
                             Console.Clear();
