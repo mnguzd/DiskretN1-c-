@@ -329,14 +329,21 @@ namespace DiskretkaN1
             int n = 0;
             rebra = 0; //Минус ошибка
             for (int i = 0; i < vershiny; i++)
-                rebra += SpisokSmezh[i].Length - 1;
+                rebra += SpisokSmezh[i].Length;
             MatrixIncid = new int[rebra, vershiny];
                 for (int i = 0; i < vershiny; i++)
                     for (int g = 0; g < SpisokSmezh[i].Length; g++)
                         if (SpisokSmezh[i][g] != 0)
                         {
+                        if ((SpisokSmezh[i][g]-1) == i)
+                        {
+                            MatrixIncid[n++, i] = 2;
+                        }
+                        else
+                        {
                             MatrixIncid[n, i] = -1;
                             MatrixIncid[n++, (SpisokSmezh[i][g] - 1)] = 1;
+                        }
                         }
         }
         private static void StartMenu()
@@ -367,7 +374,17 @@ namespace DiskretkaN1
                 {
                     case 1: Incid_Input(); Incid_To_Smezh(); Smezh_To_Spisok(); Console.Clear(); ShowingMenu(); break;
                     case 2: Smezh_Input(); Smezh_To_Spisok(); Spisok_To_Incid(); Console.Clear(); ShowingMenu(); break;
-                    case 3: Spisok_Input(); Spisok_To_Incid(); Incid_To_Smezh(); Console.Clear(); ShowingMenu(); break;
+                    case 3: Spisok_Input(); try { Spisok_To_Incid(); }
+                        catch { Environment.Exit(1); }
+                        try
+                        {
+                            Incid_To_Smezh();
+                        }
+                        catch
+                        {
+                            Environment.Exit(2);
+                        }
+                        Console.Clear(); ShowingMenu(); break;
                     case 0: Environment.Exit(0); break;
                     default: 
                             Console.Clear();
