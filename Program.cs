@@ -329,22 +329,20 @@ namespace DiskretkaN1
             int n = 0;
             rebra = 0; //Минус ошибка
             for (int i = 0; i < vershiny; i++)
-                rebra += SpisokSmezh[i].Length;
+                rebra += SpisokSmezh[i].Length-1;
             MatrixIncid = new int[rebra, vershiny];
-                for (int i = 0; i < vershiny; i++)
-                    for (int g = 0; g < SpisokSmezh[i].Length; g++)
-                        if (SpisokSmezh[i][g] != 0)
-                        {
-                        if ((SpisokSmezh[i][g]-1) == i)
-                        {
+            for (int i = 0; i < vershiny; i++)
+                for (int g = 0; g < SpisokSmezh[i].Length; g++)
+                    if (SpisokSmezh[i][g] != 0)
+                    {
+                        if ((SpisokSmezh[i][g] - 1) == i)
                             MatrixIncid[n++, i] = 2;
-                        }
                         else
                         {
                             MatrixIncid[n, i] = -1;
                             MatrixIncid[n++, (SpisokSmezh[i][g] - 1)] = 1;
                         }
-                        }
+                    }
         }
         private static void StartMenu()
         {
